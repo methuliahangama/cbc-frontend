@@ -16,7 +16,7 @@ export default function AdminProductsPage() {
         .then((res) => {
           //console.log("Use effect is running");
           setProducts(res.data);
-          console.log(res.data);
+          //console.log(res.data);
           setProductLoaded(true);
         });
     }
