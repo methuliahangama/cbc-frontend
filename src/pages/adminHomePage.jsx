@@ -57,7 +57,7 @@ export default function AdminHomePage() {
             <div className="w-[80%] h-screen">
 
                 <Routes path="/*">
-                    <Route path="/dashboard" element={<h1>Admin Dashboard</h1>} />
+                    <Route path="/" element={<h1>Admin Dashboard</h1>} />
                     <Route path="/users" element={<h1>Manage Users</h1>} />
                     <Route path="/products" element={<AdminProductsPage />} />
                     <Route path="/products/addProduct" element={<AddProductForm />} />
