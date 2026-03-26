@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import LoginPage from './pages/loginPage.jsx'
 import HomePage from './pages/homePage.jsx'
-import RegisterPage from './pages/signinPage.jsx'
+import RegisterPage from './pages/registerPage.jsx'
 import AdminHomePage from './pages/adminHomePage.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
