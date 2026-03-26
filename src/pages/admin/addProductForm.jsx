@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import uploadMediaToSupabase from "../../utils/mediaUploads";
 
 export default function AddProductForm() {
 
@@ -9,6 +10,7 @@ export default function AddProductForm() {
     const [productName, setProductName] = useState("");
     const [alternativeNames, setAlternativeNames] = useState("");
     const [imageURLs, setImageURLs] = useState("");
+    const [imageFiles, setImageFiles] = useState([]);
     const [price, setPrice] = useState("");
     const [lastPrice, setLastPrice] = useState("");
     const [stock, setStock] = useState("");
@@ -18,8 +20,14 @@ export default function AddProductForm() {
 
     async function handleSubmit() {
         const altNames = alternativeNames.split(",");
-        const imgURLs = imageURLs.split(",");
 
+        const promisesArray = [];
+
+        for (let i = 0; i < imageFiles.length; i++) {
+            promisesArray[i] = uploadMediaToSupabase(imageFiles[i]);
+        }
+        const imgURLs = await Promise.all(promisesArray);
+        
         const poducts = {
             productID: productID,
             productName: productName,
@@ -108,13 +116,13 @@ export default function AddProductForm() {
                     <div className="flex flex-col">
                         <label className="text-sm text-gray-600 mb-1">Image URLs</label>
                         <input
-                            type="text"
+                            type="file"
                             placeholder="Comma separated URLs"
                             className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            value={imageURLs}
                             onChange={(e) => {
-                                setImageURLs(e.target.value)
+                                setImageFiles(e.target.files);
                             }}
+                            multiple
                         />
                     </div>
 
