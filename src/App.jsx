@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import './App.css'
 import ProductCard from './components/productCard.jsx'
-import UserData from './components/userData.jsx'
-import Testing from './components/testing.jsx'
 import LoginPage from './pages/loginPage.jsx'
 import HomePage from './pages/homePage.jsx'
 import RegisterPage from './pages/signinPage.jsx'
@@ -14,12 +12,11 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div>
+    <div className='bg-primary'>
       <BrowserRouter>
       <Toaster position='top-right'/>
         <Routes path="/*">
           <Route path="/" element={<HomePage />} />
-          <Route path="/signup" element={<UserData />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signin" element={<RegisterPage />} />
           <Route path="/admin/*" element={<AdminHomePage />} />
