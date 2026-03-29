@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminProductsPage() {
 
@@ -12,7 +13,7 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     if (!productLoaded) {
-      axios.get("import.meta.env.VITE_BACKEND_URL/api/products")
+      axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products")
         .then((res) => {
           //console.log("Use effect is running");
           setProducts(res.data);
@@ -22,6 +23,8 @@ export default function AdminProductsPage() {
     }
 
   }, [productLoaded]);
+
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 relative">
@@ -115,7 +118,7 @@ export default function AdminProductsPage() {
                         const token = localStorage.getItem("token");
 
                         axios.delete(
-                          `import.meta.env.VITE_BACKEND_URL/api/products/${product.productID}`,
+                          import.meta.env.VITE_BACKEND_URL + "/api/products/" + product.productID,
                           {
                             headers: {
                               Authorization: `Bearer ${token}`
@@ -139,7 +142,10 @@ export default function AdminProductsPage() {
                       <FaTrash />
                     </button>
 
-                    <button className="bg-blue-100 hover:bg-blue-200 text-blue-600 p-2 rounded-lg transition">
+                    <button className="bg-blue-100 hover:bg-blue-200 text-blue-600 p-2 rounded-lg transition"
+                    onClick={()=>{
+                      navigate("/admin/products/editProduct", {state: {product: product}});
+                    }}>
                       <FaPencil />
                     </button>
 
