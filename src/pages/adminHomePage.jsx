@@ -6,8 +6,40 @@ import AdminProductsPage from "./admin/adminProductsPage.jsx";
 import AddProductForm from "./admin/addProductForm.jsx";
 import EditProductForm from "./admin/editProductForm.jsx";
 import AdminOrdersPage from "./admin/adminOrderPage.jsx";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function AdminHomePage() {
+    const [user, setUser] = useState(null);
+    const navigate = useNavigate();
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+        axios.get(import.meta.env.VITE_BACKEND_URL + "/api/users", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }).then((res) => {
+            console.log(res.data);
+            if(res.data.type !== "admin") {
+                toast.error("Unauthorized access. Admins only.");
+                navigate("/login");
+            }else {
+                setUser(res.data);
+            }
+        }).catch((err) => {
+            console.error(err);
+            toast.error("Failed to fetch user details. Please login again.");
+            navigate("/login");
+        });
+    }, []);
+
     return (
         <div className="w-full h-screen flex bg-gray-100">
 
@@ -15,7 +47,7 @@ export default function AdminHomePage() {
             <div className="w-[250px] h-full bg-gradient-to-b from-blue-600 to-indigo-700 text-white flex flex-col shadow-lg">
 
                 <h1 className="text-2xl font-bold text-center py-6 border-b border-blue-400">
-
+                    Admin Panel
                 </h1>
 
                 <nav className="flex flex-col mt-4 space-y-2">
@@ -58,7 +90,7 @@ export default function AdminHomePage() {
             {/* Main Content */}
             <div className="w-[80%] h-screen">
 
-                <Routes path="/*">
+                {user != null && <Routes path="/*">
                     <Route path="/" element={<h1>Admin Dashboard</h1>} />
                     <Route path="/users" element={<h1>Manage Users</h1>} />
                     <Route path="/products" element={<AdminProductsPage />} />
@@ -66,7 +98,16 @@ export default function AdminHomePage() {
                     <Route path="/products/editProduct" element={<EditProductForm />} />
                     <Route path="/orders" element={<AdminOrdersPage />} />
                     <Route path="/*" element={<h1>404 - Page Not Found</h1>} />
-                </Routes>
+                </Routes>}
+                {
+                    user==null && <div className="w-full h-full justify-center items-center">
+                        {/* animation loading page */}
+                        <div className="animate-spin rounded-full h-32 w-32 border-2 border-gray-800 border-b-accent b-4">
+
+                        </div>
+
+                    </div>
+                }
 
             </div>
 
