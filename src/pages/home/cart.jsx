@@ -3,43 +3,35 @@ import { loadCart } from "../../utils/cartFunction";
 import ProductCard from "../../components/productCard";
 import CartCard from "../../components/cartCard";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Cart() {
     const [cart, setCart] = useState([]);
     const [total, setTotal] = useState(0);
     const [labeledTotal, setLabeledTotal] = useState(0);
+    const navigate = useNavigate();
     useEffect(() => {
         setCart(loadCart());
         axios.post(import.meta.env.VITE_BACKEND_URL + "/api/orders/quote", {
             orderedItems: loadCart()
         }).then((res) => {
-            //console.log(res.data);
-            setTotal(res.data.total);
-            setLabeledTotal(res.data.labeledTotal);
+            console.log(loadCart());
+            console.log(res.data);
+            if (res.data.total != null) {
+                setTotal(res.data.total);
+                setLabeledTotal(res.data.labeledTotal);
+            }
 
         })
     }, []);
 
     function onOrderCheckOutClick() {
-        const token = localStorage.getItem("token");
-        if(token == null) { 
-            return;
-        }
-        axios.post(import.meta.env.VITE_BACKEND_URL + "/api/orders", {
-            orderedItems: cart,
-            name : "John Doe",
-            address: "123 Main St, Anytown, USA",
-            contactNumber: "123-456-7890"
-        },
-         {
-            headers: {
-                Authorization: "Bearer " + token,
-            },
-        })
-            .then((res) => {
-                console.log(res.data);
-            });
+        navigate("/shipping", {
+            state: {
+                items: loadCart(),
+            }
+        });
     }
 
     return (

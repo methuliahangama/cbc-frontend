@@ -40,7 +40,9 @@ export function deleteItem(productID) {
     const cart = loadCart();
     const index = cart.findIndex((item) => { return item.productID === productID });
     if (index !== -1) {
-        cart.splice(index, 1);
-        saveCart(cart);
+        const newCart = cart.splice(index, 1);
+        saveCart(newCart);
+        console.log(newCart);
+    
     }
 }

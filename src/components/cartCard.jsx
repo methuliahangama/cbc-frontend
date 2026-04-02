@@ -17,8 +17,9 @@ export default function CartCard(props) {
                         setProduct(res.data);
                         //console.log(res.data);
                         setLoaded(true);
-                    }else {
+                    } else {
                         deleteItem(productID);
+                        window.location.reload();
                     }
                 }).catch((err) => {
                     console.log(err);
@@ -28,13 +29,21 @@ export default function CartCard(props) {
 
 
     return (
-        <tr className="hover:bg-accent hover:text-white">
-            <td className=""><img src={product?.images[0]} alt={product?.productName} className="w-16 h-16 object-cover rounded-lg mx-auto" /></td>
-            <td className="text-center">{product?.productName}</td>
-            <td className="text-center">{product?.productID}</td>
-            <td className="text-center">{qty}</td>
-            <td className="text-center">LKR. {product?.lastPrice.toFixed(2)}</td>
-            <td className="text-center">LKR. {(product?.lastPrice * qty).toFixed(2)}</td>
-        </tr>
+        <>
+            {
+                !loaded ? <tr>
+                    <td>Loading...</td>
+                </tr> :
+                    <tr className="hover:bg-accent hover:text-white">
+                        <td className=""><img src={product?.images[0]} alt={product?.productName} className="w-16 h-16 object-cover rounded-lg mx-auto" /></td>
+                        <td className="text-center">{product?.productName}</td>
+                        <td className="text-center">{product?.productID}</td>
+                        <td className="text-center">{qty}</td>
+                        <td className="text-center">LKR. {product?.lastPrice.toFixed(2)}</td>
+                        <td className="text-center">LKR. {(product?.lastPrice * qty).toFixed(2)}</td>
+                    </tr>
+            }
+
+        </>
     )
 }
