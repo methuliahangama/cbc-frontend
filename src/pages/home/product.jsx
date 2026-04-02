@@ -6,15 +6,17 @@ import ProductCard from "../../components/productCard";
 export default function ProductPage() {
     const [products, setProducts] = useState([]);
     const [loadingStatus, setLoadingStatus] = useState("loading");
+    const [query, setQuery] = useState("");
     useEffect(
         () => {
             if (loadingStatus === "loading") {
                 axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products")
                     .then(
                         (res) => {
-                            console.log(res.data);
+                            //console.log(res.data);
                             setProducts(res.data);
                             setLoadingStatus("loaded");
+                            setProductsLoaded(true);
                         }
                     ).catch(
                         (err) =>
@@ -23,16 +25,64 @@ export default function ProductPage() {
             }
 
         }, []);
-    return (
-        <div className="w-full h-full overflow-y-scroll flex flex-wrap justify-center">
-            {
-                products.map(
-                    (product) =>
-                        <ProductCard product={product} />
 
+    function search(e) {
+        const query = e.target.value;
+        setQuery(query);
+        setLoadingStatus("loading");
+        if (query == "") {
+            axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products")
+                .then(
+                    (res) => {
+                        //console.log(res.data);
+                        setProducts(res.data);
+                        setLoadingStatus("loaded");
+                    }
+                ).catch(
+                    (err) =>
+                        toast.error("Failed to load products")
                 )
+        } else {
+            axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products/search/" + query)
+                .then(
+                    (res) => {
+                        //console.log(res.data);
+                        setProducts(res.data);
+                        setLoadingStatus("loaded");
+                    }
+                ).catch(
+                    (err) =>
+                        toast.error("Failed to load products")
+                );
+        }
+    }
 
-            }
+
+    return (
+        <div className="w-full h-full pt-4 relative">
+            <div className="absolute w-full flex justify-center">
+                <input type="text"
+                    placeholder="Search products..."
+                    className="w-1/2 p-2 absolute z-50"
+                    onChange={search}
+                    value={query}
+                />
+            </div>
+            {loadingStatus === "loaded" && <div className="w-full h-full overflow-y-scroll flex flex-wrap justify-center pt-4 relative">
+
+                {
+                    products.map(
+                        (product) =>
+                            <ProductCard product={product} />
+
+                    )
+
+                }
+            </div>}
+            {loadingStatus === "loading" && <div className="w-full h-full flex items-center justify-center">
+                <div className="animate-spin rounded-full h-32 w-32 border-2 border-gray-800 border-b-accent b-4">
+                </div>
+            </div>}
         </div>
     );
 }
