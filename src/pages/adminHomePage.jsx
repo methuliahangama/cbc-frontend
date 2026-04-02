@@ -5,6 +5,7 @@ import { Route } from "react-router-dom";
 import AdminProductsPage from "./admin/adminProductsPage.jsx";
 import AddProductForm from "./admin/addProductForm.jsx";
 import EditProductForm from "./admin/editProductForm.jsx";
+import AdminOrdersPage from "./admin/adminOrderPage.jsx";
 
 export default function AdminHomePage() {
     return (
@@ -63,7 +64,7 @@ export default function AdminHomePage() {
                     <Route path="/products" element={<AdminProductsPage />} />
                     <Route path="/products/addProduct" element={<AddProductForm />} />
                     <Route path="/products/editProduct" element={<EditProductForm />} />
-                    <Route path="/orders" element={<h1>Manage Orders</h1>} />
+                    <Route path="/orders" element={<AdminOrdersPage />} />
                     <Route path="/*" element={<h1>404 - Page Not Found</h1>} />
                 </Routes>
 
